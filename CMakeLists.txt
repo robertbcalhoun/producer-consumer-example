@@ -1,5 +1,29 @@
 # Copyright (c) 2020 Emmanuel Arias
+# SPDX-License-Identifier: MIT
+
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+
+# Build in release mode by default
+if (NOT CMAKE_BUILD_TYPE)
+    message("MAKE_BUILD_TYPE unset, set CMAKE_BUILD_TYPE=Release")
+    set(CMAKE_BUILD_TYPE Release CACHE INTERNAL "")
+endif()
+
+
+set(CMAKE_C_STANDARD                99)
+# use C++20 so as to allow us to use <format>
+set(CMAKE_CXX_STANDARD              23)
+
+# Make the standard a requirement => prevent fallback to previous
+# supported standard
+set(CMAKE_C_STANDARD_REQUIRED       ON)
+set(CMAKE_CXX_STANDARD_REQUIRED     ON)
+
+# We want to pass standard C/C++ flags, without gnu extensions
+set(CMAKE_C_EXTENSIONS              OFF)
+set(CMAKE_CXX_EXTENSIONS            OFF)
+
+
 project(producer-consumer-example)
 
 file(GLOB_RECURSE SOURCE_FILES 
