@@ -2,9 +2,17 @@
 #pragma once
 #include <mutex>
 #include <queue>
-#include <tuple>
+#include <condition_variable>
 
 class Task;
+
+class TaskQueueSubscription {
+   public:
+    TaskQueueSubscription(std::mutex& mutex, std::condition_variable& conditionvar)
+        : m(mutex), cv(conditionvar) {}
+    std::mutex& m;
+    std::condition_variable& cv;
+};
 
 class TaskQueue {
    public:
@@ -15,7 +23,7 @@ class TaskQueue {
     void PushTasks(std::vector<Task*>& tasks);
     void StopQueue();
     // Way for consumers to get the sync variables
-    std::tuple<std::mutex&, std::condition_variable&> Subscribe();
+    TaskQueueSubscription Subscribe();
 
     // Non-thread safe function. Consumers must ensure
     // lock acquisition

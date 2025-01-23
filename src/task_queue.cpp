@@ -14,9 +14,8 @@ TaskQueue::~TaskQueue() {
     }
 }
 
-std::tuple<std::mutex&, std::condition_variable&>
-TaskQueue::Subscribe() {
-    return std::make_tuple(std::ref(m_Mutex), std::ref(m_ConditionVariable));
+TaskQueueSubscription TaskQueue::Subscribe() {
+    return TaskQueueSubscription(std::ref(m_Mutex), std::ref(m_ConditionVariable));
 }
 
 void TaskQueue::PushTask(Task* t) {

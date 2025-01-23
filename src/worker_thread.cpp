@@ -10,12 +10,12 @@
 
 void WorkerThread(const int workerId, TaskQueue& taskQueue,
                   std::mutex& coutMutex) {
-    auto& [m, cv] = taskQueue.Subscribe();
+    const TaskQueueSubscription& taskq = taskQueue.Subscribe();
 
     while (true) {
         auto data = [&]() -> std::optional<Task*> {
-            std::unique_lock l{m};
-            cv.wait(l, [&] {
+            std::unique_lock l{taskq.m};
+            taskq.cv.wait(l, [&] {
                 return taskQueue.IsQueueStopped() || taskQueue.HasPendingTask();
             });
             if (taskQueue.IsQueueStopped()) {
